@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Writing Quiz (Units 3-5)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 font-sans min-h-screen py-8 px-4">
+    <div class="max-w-2xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold text-slate-800">Academic Writing Quiz</h1>
+            <p class="text-slate-500 text-sm mt-1">Units 3-5 Comprehensive Assessment (100 Items)</p>
+        </div>
+
+        <!-- Setup Screen / Category Selection -->
+        <div id="setup-card" class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+            <h2 class="text-lg font-bold text-slate-700 mb-4">ជ្រើសរើសផ្នែកដែលចង់ធ្វើតេស្ត៖</h2>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="startQuiz('sec1')" class="p-4 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 font-semibold text-left transition flex justify-between items-center">
+                    <span>ផ្នែកទី ១៖ Matching Key Terms</span>
+                    <span class="text-xs bg-indigo-200 text-indigo-800 px-2.5 py-1 rounded-full">20 សំណួរ</span>
+                </button>
+                <button onclick="startQuiz('sec2')" class="p-4 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 font-semibold text-left transition flex justify-between items-center">
+                    <span>ផ្នែកទី ២៖ Defining Key Terms</span>
+                    <span class="text-xs bg-indigo-200 text-indigo-800 px-2.5 py-1 rounded-full">20 សំណួរ</span>
+                </button>
+                <button onclick="startQuiz('sec3')" class="p-4 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 font-semibold text-left transition flex justify-between items-center">
+                    <span>ផ្នែកទី ៣៖ True / False</span>
+                    <span class="text-xs bg-indigo-200 text-indigo-800 px-2.5 py-1 rounded-full">30 សំណួរ</span>
+                </button>
+                <button onclick="startQuiz('sec4')" class="p-4 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 font-semibold text-left transition flex justify-between items-center">
+                    <span>ផ្នែកទី ៤៖ Multiple Choice</span>
+                    <span class="text-xs bg-indigo-200 text-indigo-800 px-2.5 py-1 rounded-full">30 សំណួរ</span>
+                </button>
+                <button onclick="startQuiz('all')" class="p-4 rounded-xl border border-emerald-300 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-center transition mt-2 shadow-md">
+                    🚀 ធ្វើតេស្តសរុបទាំងអស់ (100 សំណួរ)
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-container" class="bg-white rounded-2xl shadow-xl p-6 md:p-8 hidden">
+            <!-- Progress Info -->
+            <div class="flex justify-between items-center mb-4 text-xs md:text-sm font-semibold text-slate-500">
+                <span id="section-badge" class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">Section</span>
+                <span id="item-number">#1 of 20</span>
+                <span id="score-text" class="text-emerald-600">ពិន្ទុ: 0</span>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-100 h-2 rounded-full mb-6 overflow-hidden">
+                <div id="progress-bar" class="bg-indigo-600 h-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+
+            <!-- Question Box -->
+            <h2 id="question-text" class="text-lg md:text-xl font-bold text-slate-800 mb-6 leading-relaxed"></h2>
+
+            <!-- Options Container -->
+            <div id="options-container" class="space-y-3 mb-6"></div>
+
+            <!-- Explanation / Feedback Box -->
+            <div id="feedback-card" class="hidden p-4 rounded-xl mb-6">
+                <div class="flex items-center space-x-2">
+                    <span id="feedback-icon" class="text-lg"></span>
+                    <h3 id="feedback-title" class="font-bold text-sm"></h3>
+                </div>
+                <p id="feedback-text" class="text-xs md:text-sm mt-1"></p>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                <button id="prev-btn" onclick="prevQuestion()" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition">
+                    ← មុន
+                </button>
+                <span id="progress-text" class="text-xs text-slate-400 font-medium">សំណួរ 1 / 20</span>
+                <button id="next-btn" onclick="nextQuestion()" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-md shadow-indigo-200 transition">
+                    បន្ទាប់ →
+                </button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-card" class="bg-white rounded-2xl shadow-xl p-8 text-center hidden">
+            <div class="text-5xl mb-4">🏆</div>
+            <h2 class="text-2xl font-bold text-slate-800 mb-2">អបអរសាទរ! អ្នកបានបញ្ចប់ការធ្វើតេស្ត</h2>
+            <p class="text-slate-500 mb-6">លទ្ធផលពិន្ទុរបស់អ្នកទទួលបាន៖</p>
+            
+            <div class="inline-block bg-indigo-50 border border-indigo-100 rounded-2xl px-8 py-4 mb-8">
+                <div id="final-score" class="text-4xl font-extrabold text-indigo-600">0 / 0</div>
+                <div id="final-percentage" class="text-sm font-medium text-slate-500 mt-1">0% Accuracy</div>
+            </div>
+
+            <div>
+                <button onclick="restartQuiz()" class="px-8 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-200 transition">
+                    🔄 ធ្វើតេស្តម្ដងទៀត
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data containing all 100 questions from the 4 sections
+        const allQuestions = [
+            // --- SECTION I: MATCHING KEY TERMS (1-20) ---
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "1. Match the term 'climb' to its correct definition:", opts: ["To go up or ascend", "To make something less in amount", "To manage or direct", "To form a mental image"], ans: 0, exp: "'climb' មានន័យថា ឡើង ឬឡើងទៅលើ (To go up or ascend)។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "2. Match the term 'addictive' to its correct definition:", opts: ["Having qualities that make you want to repeat an action", "A good or desirable quality or benefit", "A historic building or recognizable site", "Priced reasonably for students"], ans: 0, exp: "'addictive' គឺមានលក្ខណៈញៀន ឬចង់ធ្វើវាម្ដងទៀត។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "3. Match the term 'economy' to its correct definition:", opts: ["The system of production, distribution, and consumption of goods/wealth", "The beliefs, customs, and actions of a group", "A barrier across a waterway", "Surrounding conditions and ecology"], ans: 0, exp: "'economy' គឺប្រព័ន្ធសេដ្ឋកិច្ច (ផលិតកម្ម ចែកចាយ និងការប្រើប្រាស់ទ្រព្យសម្បត្តិ)។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "4. Match the term 'investigator' to its correct definition:", opts: ["A person who tries to learn how something happened", "Someone who comes to live permanently in another country", "A woman whose job is sewing", "A person who lives in a particular place"], ans: 0, exp: "'investigator' គឺអ្នកស៊ើបអង្កេតស្វែងរកការពិត។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "5. Match the term 'destination' to its correct definition:", opts: ["A place to which someone is going or traveling", "A statue or structure built to remember a person", "A deep, narrow valley with steep rocky sides", "A designated physical location"], ans: 0, exp: "'destination' គឺគោលដៅ ឬកន្លែងដែលត្រូវទៅដល់។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "6. Match the term 'landmark' to its correct definition:", opts: ["A historic building or recognizable site", "The work of building large structures", "A severe tropical storm", "An extraordinary quality"], ans: 0, exp: "'landmark' គឺអគារប្រវត្តិសាស្ត្រ ឬទីកន្លែងសម្គាល់ដ៏ល្បី។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "7. Match the term 'memorial' to its correct definition:", opts: ["A statue or structure built to remember a person or event", "A formal endorsement testifying to qualifications", "A heavy vulcanized black rubber disk", "A barrier across a waterway"], ans: 0, exp: "'memorial' គឺអនុស្សាវរីយ៍ ឬបូជនីយដ្ឋានរំលឹកដល់មនុស្ស/ព្រឹត្តិការណ៍។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "8. Match the term 'survive' to its correct definition:", opts: ["To continue to live through difficult or dangerous times", "To express unhappiness or dissatisfaction", "To protect or watch over carefully", "To take the place of something"], ans: 0, exp: "'survive' គឺការរស់រានមានជីវិតឆ្លងកាត់ការលំបាក។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "9. Match the term 'continent' to its correct definition:", opts: ["One of the primary large landmasses on Earth", "An overflow of a large amount of water", "Surrounding ecological conditions", "A professional job or trade"], ans: 0, exp: "'continent' គឺទ្វីប (ដីគោកដ៏ធំនៅលើផែនដី)។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "10. Match the term 'research' to its correct definition:", opts: ["To study a subject in detail to discover new facts", "To say what will happen in the future", "To make something better or enhance quality", "To cause a liquid to stream smoothly"], ans: 0, exp: "'research' គឺការស្រាវជ្រាវសិក្សាលម្អិតដើម្បីស្វែងរកការពិតថ្មី។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "11. Match the term 'strict' to its correct definition:", opts: ["Demanding that rules and discipline are obeyed precisely", "Desiring to prevent someone from harm", "Priced reasonably enough for regular students", "Intricate, complex, or difficult to analyze"], ans: 0, exp: "'strict' គឺតឹងរ៉ឹង គោរពវិន័យច្បាស់លាស់។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "12. Match the term 'seamstress' to its correct definition:", opts: ["A woman whose job is sewing and making clothing", "A person who formally submits a request for entrance", "The defensive goalkeeper in hockey", "A relative related by blood or marriage"], ans: 0, exp: "'seamstress' គឺជាងដេរខោអាវស្ត្រី។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "13. Match the term 'ingredient' to its correct definition:", opts: ["One of the food items used together to make a dish", "A set of instructions explaining how to prepare a meal", "Clothes and linens that need to be washed", "A sweet dairy product made by removing water"], ans: 0, exp: "'ingredient' គឺគ្រឿងផ្សំធ្វើម្ហូប។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "14. Match the term 'typhoon' to its correct definition:", opts: ["A violent tropical cyclone in the Northwest Pacific", "A severe tropical storm with violent winds in the Atlantic", "A violent tropical storm in the South Pacific", "A microscopic bacterium or virus"], ans: 0, exp: "'typhoon' គឺព្យុះទីហ្វុងនៅតំបន់ប៉ាស៊ីហ្វិកខាងជើងវ៉េស។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "15. Match the term 'adapt' to its correct definition:", opts: ["To change physical traits or behavior to survive in a new environment", "To make a formal written request for admission", "To try to perform something challenging", "To gain, record, or earn points"], ans: 0, exp: "'adapt' គឺការបត់បែនខ្លួនរស់ក្នុងបរិស្ថានថ្មី។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "16. Match the term 'beverage' to its correct definition:", opts: ["Any type of drink prepared for human consumption other than plain water", "Condensed sweetened dairy product", "A heavy vulcanized black rubber disk", "A deep, narrow valley with steep rocky sides"], ans: 0, exp: "'beverage' គឺភេសជ្ជៈគ្រប់ប្រភេទក្រៅពីទឹកបរិសុទ្ធ។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "17. Match the term 'community college' to its correct definition:", opts: ["A two-year higher education institution offering foundational courses and associate degrees", "A formal university department for graduate studies", "A vocational training center for seamstresses", "An institution specializing in hurricane research"], ans: 0, exp: "'community college' គឺមហាវិទ្យាល័យសហគមន៍រយៈពេល ២ឆ្នាំ។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "18. Match the term 'goalie' to its correct definition:", opts: ["The defensive goalkeeper whose primary duty is blocking incoming pucks or balls", "An athlete who guards the net in soccer only", "A player who scores winning points in tennis", "A referee who oversees hockey matches"], ans: 0, exp: "'goalie' គឺអ្នកចាំទីការពារសំណាញ់ទី។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "19. Match the term 'puck' to its correct definition:", opts: ["A heavy, vulcanized black rubber disk struck by hockey sticks", "A ball used in professional tennis matches", "A piece of protective equipment worn by players", "A traditional cooking utensil for soups"], ans: 0, exp: "'puck' គឺកាស៊ូវាយក្នុងកីឡាហុកគី។" },
+            { sec: 'sec1', secTitle: 'Section I: Matching Key Terms', q: "20. Match the term 'ought to' to its correct definition:", opts: ["Used to indicate duty, strong advisability, or logical expectation (equivalent to 'should')", "Used to describe past actions no longer true", "Used to express an unexpected condition", "Used to introduce an adjective clause"], ans: 0, exp: "'ought to' មានន័យស្មើនឹងពាក្យ 'should' (គួរតែ)។" },
+
+            // --- SECTION II: DEFINING KEY TERMS (21-40) ---
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "1. Select the correct definition for 'Improvement':", opts: ["The process or result of making something better than before", "The power to direct behavior and events", "Unfair treatment based on origin or race", "A long-established custom passed down"], ans: 0, exp: "Improvement = ការធ្វើឱ្យប្រសើរឡើង។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "2. Select the correct definition for 'Culture':", opts: ["The beliefs, customs, arts, and way of life of a group or society", "A barrier built across a waterway", "A two-year higher education institution", "Physical traits changed to survive"], ans: 0, exp: "Culture = វប្បធម៌ ជំនឿ និងប្រពៃណី។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "3. Select the correct definition for 'Immigrant':", opts: ["A person who moves to live permanently in a foreign country", "A tourist visiting a landmark for an afternoon", "A woman whose job is sewing clothing", "A defensive player in hockey"], ans: 0, exp: "Immigrant = ជនអន្តោប្រវេសន៍រស់នៅបរទេសអចិន្ត្រៃយ៍។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "4. Select the correct definition for 'Connection':", opts: ["A relationship, link, or association between two or more things", "Unfair treatment of people", "A severe tropical storm", "Reasonably priced items"], ans: 0, exp: "Connection = ទំនាក់ទំនង ឬការតភ្ជាប់។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "5. Select the correct definition for 'Control':", opts: ["The power to direct, influence, or manage behavior and events", "The process of building large structures", "To study a subject in detail", "A deep narrow valley"], ans: 0, exp: "Control = ការគ្រប់គ្រង ឬចាត់ចែង។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "6. Select the correct definition for 'Construction':", opts: ["The process or work of building large structures", "A formal suggestion or advice", "A person who lives in a particular place", "A competition to win a prize"], ans: 0, exp: "Construction = ការសាងសង់ ឬស្ថាបនា។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "7. Select the correct definition for 'Opportunity':", opts: ["A favorable set of circumstances that makes it possible to do something", "Rules and discipline obeyed precisely", "A heavy vulcanized rubber disk", "A specific landmark"], ans: 0, exp: "Opportunity = ឱកាសល្អ។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "8. Select the correct definition for 'Discrimination':", opts: ["Unfair or prejudicial treatment of people based on race, sex, or origin", "The process of making something better", "A formal written request for entrance", "Natural conditions of surroundings"], ans: 0, exp: "Discrimination = ការរើសអើងអយុត្តិធម៌។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "9. Select the correct definition for 'Tradition':", opts: ["A long-established custom or belief passed down through generations", "A deep, narrow valley with steep sides", "To say what will happen in the future", "A person's regular job"], ans: 0, exp: "Tradition = ទំនៀមទម្លាប់ប្រពៃណីតៗគ្នា។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "10. Select the correct definition for 'Ingredient':", opts: ["One of the foods, substances, or items used to prepare a dish", "A violent tropical cyclone", "To study in detail", "An associate degree"], ans: 0, exp: "Ingredient = គ្រឿងផ្សំចំណីអាហារ។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "11. Select the correct definition for 'Admission':", opts: ["The process or fact of entering or being allowed into an institution", "Reasonably priced items", "A person's regular profession", "A statue built for remembrance"], ans: 0, exp: "Admission = ការអនុញ្ញាតឱ្យចូលរៀន ឬចូលស្ថាប័ន។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "12. Select the correct definition for 'Affordable':", opts: ["Reasonably priced so that regular people or students can buy it", "Extremely expensive and exclusive", "Provided completely free of charge", "Available only during holidays"], ans: 0, exp: "Affordable = តម្លៃសមរម្យទិញរួច។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "13. Select the correct definition for 'Canyon':", opts: ["A deep, narrow valley with steep cliff sides often carved by a river", "A barrier built across a waterway", "A large primary landmass on Earth", "A severe Atlantic storm"], ans: 0, exp: "Canyon = ជ្រលងភ្នំជ្រៅចោទ។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "14. Select the correct definition for 'Characteristic':", opts: ["A feature or quality belonging typically to identify a person/thing", "The power to direct behavior", "Unfair treatment based on origin", "A two-year degree program"], ans: 0, exp: "Characteristic = លក្ខណៈពិសេសអត្តសញ្ញាណ។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "15. Select the correct definition for 'Contest':", opts: ["An event or competition in which people strive to win a prize", "A formal suggestion or advice", "A deep narrow valley", "A person's regular job"], ans: 0, exp: "Contest = ការប្រកួតប្រជែង។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "16. Select the correct definition for 'Environment':", opts: ["The natural conditions or surrounding environment in which one lives", "The system of production and wealth", "A historic building or landmark", "Rules obeyed precisely"], ans: 0, exp: "Environment = បរិស្ថានជុំវិញ។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "17. Select the correct definition for 'Occupation':", opts: ["A person's regular job, profession, or principal activity", "A statue built to remember an event", "To change traits to survive", "A short two-year degree"], ans: 0, exp: "Occupation = មុខរបរ ឬការងារប្រចាំថ្ងៃ។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "18. Select the correct definition for 'Recommendation':", opts: ["A formal suggestion or advice about the best course of action", "Unfair treatment of people", "A heavy rubber puck", "Entering an institution"], ans: 0, exp: "Recommendation = ការផ្តល់អនុសាសន៍ ឬយោបល់ណែនាំ។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "19. Select the correct definition for 'Resident':", opts: ["A person who lives in a particular place on a long-term basis", "A tourist visiting for an afternoon", "An investigator studying artifacts", "A defensive goalie"], ans: 0, exp: "Resident = អ្នករស់នៅក្នុងតំបន់ជាក់លាក់។" },
+            { sec: 'sec2', secTitle: 'Section II: Defining Key Terms', q: "20. Select the correct definition for 'Remarkable':", opts: ["Worthy of attention, extraordinary, or striking", "Priced reasonably for students", "Incomplete thought lacking a verb", "A common sports position"], ans: 0, exp: "Remarkable = អស្ចារ្យ គួរឱ្យកត់សម្គាល់។" },
+
+            // --- SECTION III: TRUE / FALSE (41-70) ---
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "1. A topic sentence states the main idea of a paragraph and is usually found at the very beginning.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! ប្រយោគប្រធានតែងតែបង្ហាញ Main Idea ហើយច្រើននៅដើមដំបូង។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "2. A strong topic sentence should consist of a bare topic announcement with no controlling idea.", opts: ["True", "False"], ans: 1, exp: "ខុស! Topic sentence ដ៏ល្អត្រូវតែមាន Controlling Idea មិនមែនមានតែប្រធានបទសុទ្ធទេ។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "3. Rule 1 for commas requires using commas for items in a series of three or more.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! ប្រើក្បៀសសម្រាប់បញ្ជីដែលមានចាប់ពី ៣ធាតុឡើងទៅ។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "4. You should always place a comma between two items joined by the word 'and' in a simple list.", opts: ["True", "False"], ans: 1, exp: "ខុស! បើមានតែ ២ ធាតុភ្ជាប់ដោយ 'and' គឺមិនបាច់ដាក់ក្បៀសទេ។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "5. A compound sentence joins two independent clauses using coordinating conjunctions like and, but, or so.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! នេះជាលក្ខណៈរបស់ Compound Sentence។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "6. A sentence fragment is a complete sentence punctuated correctly as a full thought.", opts: ["True", "False"], ans: 1, exp: "ខុស! Sentence fragment គឺជាប្រយោគមិនពេញលេញ (កាត់ៗ) ទេ។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "7. A run-on sentence joins two independent clauses without proper punctuation or connecting conjunctions.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! នោះជាពាក្យនិយមន័យនៃ Run-on sentence។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "8. A comma splice occurs when two full sentences are joined by only a comma without a conjunction or semicolon.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! នេះគឺជា Comma splice។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "9. An adjective clause gives information about a noun and typically begins with relative pronouns like who, whom, that, or which.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! Adjective clause ប្រាប់ព័ត៌មានបន្ថែមក្បែរនាម។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "10. An adverb clause begins with connecting words such as because, before, after, when, if, or although.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! ទាំងនេះជា Connector របស់ Adverb Clause។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "11. Supporting sentences explain, prove, and expand the main idea introduced in your topic sentence.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! Supporting sentences មានតួនាទីពន្យល់ និងគាំទ្រ Topic sentence។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "12. Off-topic sentences strengthen paragraph unity and improve academic credibility.", opts: ["True", "False"], ans: 1, exp: "ខុស! ប្រយោគខុសប្រធានបទ (Off-topic) ធ្វើឱ្យខូច paragraph unity។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "13. Pronoun agreement requires using 'it' for plural nouns and 'they' for singular nouns.", opts: ["True", "False"], ans: 1, exp: "ខុស! 'it' ប្រើសម្រាប់ Singular ហើយ 'they' ប្រើសម្រាប់ Plural ទេ!" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "14. A concluding sentence signals that the discussion is finished and provides a satisfying sense of closure.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! Concluding sentence ជាប្រយោគបញ្ចប់បិទកថាខណ្ឌ។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "15. You should introduce completely brand-new factual claims in your concluding sentence.", opts: ["True", "False"], ans: 1, exp: "ខុស! ហាមដាច់ខាតមិនឱ្យដាក់គំនិត/ព័ត៌មានថ្មីស្រឡាងក្នុង Concluding Sentence ឡើយ។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "16. The indefinite article 'a' is used before words beginning with a consonant sound, including consonant sounds like /j/ in 'university'.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! ប្រើ 'a university' ព្រោះវាចេញសំឡេងព្យញ្ជនៈ /j/!" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "17. The definite article 'the' is used when both the writer and reader know the exact specific entity.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! 'the' ប្រើចំពោះអ្វីដែលច្បាស់លាស់ទាំងអ្នកសរសេរ និងអ្នកអាន។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "18. Zero article is used when generalizing with plural count nouns or discussing non-count abstract concepts.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! Zero article ប្រើពេលនិយាយជារួម (Generalizations)។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "19. Proper names of specific places and sovereign nations must be capitalized in academic writing.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! ឈ្មោះទីតាំងជាក់លាក់ ឬប្រទេសត្រូវសរសេរអក្សរធំ (Capitalized)។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "20. Common sports positions like goalie and referee should always be capitalized.", opts: ["True", "False"], ans: 1, exp: "ខុស! តំណែងកីឡាទូទៅដូចជា goalie/referee មិនបាច់សរសេរអក្សរធំទេ។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "21. The word 'consist' is always followed by the preposition 'of'.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! 'consist' ត្រូវតែដើរជាមួយ 'of' (consist of)។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "22. The modal auxiliary verb 'ought to' is equivalent in meaning and usage to 'should'.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! 'ought to' មានន័យ និងការប្រើប្រាស់ដូច 'should'។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "23. A community college is a four-year university offering doctoral graduate degrees.", opts: ["True", "False"], ans: 1, exp: "ខុស! Community college ជាសាលា ២ឆ្នាំទេ មិនមែនសាលា ៤ឆ្នាំថ្នាក់បណ្ឌិតទេ។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "24. Condensed milk is a thick, sweetened dairy product produced by removing water from whole milk.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! ទឹកដោះគោខាប់។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "25. A puck is a heavy, vulcanized black rubber disk used in ice hockey.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! Puck កាស៊ូវាយហុកគី។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "26. Paragraph unity is maintained when every supporting sentence relates directly to the topic sentence.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! គ្រប់ប្រយោគទ្រទ្រង់ទាក់ទង topic sentence ទើបមាន Unity។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "27. Using WH- questions (Who, What, Where, When, Why, How) helps build rich and convincing supporting sentences.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! ការប្រើ WH-questions ជួយបង្កើនព័ត៌មានគាំទ្រ។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "28. Transition signals for conclusions such as 'Therefore', 'In conclusion', and 'Overall' should be followed by a comma.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! ពាក្យផ្លាស់ប្តូរសេចក្តីបញ្ចប់ត្រូវមានក្បៀសតាមពីក្រោយ។" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "29. The zero article should be used when writing 'The computers are found in many modern homes' for generalizations.", opts: ["True", "False"], ans: 1, exp: "ខុស! ពេលនិយាយជារួម (Generalization) ត្រូវលុប 'The' ចេញ ពោលគឺប្រើ 'Computers are found...'" },
+            { sec: 'sec3', secTitle: 'Section III: True / False', q: "30. A successful academic paragraph follows a core writing formula containing a topic sentence, supporting details, and a concluding sentence.", opts: ["True", "False"], ans: 0, exp: "ត្រូវ! រូបមន្តកថាខណ្ឌអប់រំត្រូវមាន Topic sentence + Supporting details + Concluding sentence" },
+
+            // --- SECTION IV: MULTIPLE CHOICE (71-100) ---
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "1. Which of the following best describes the core function of a topic sentence?", opts: ["It states the main idea and limiting controlling idea of the paragraph.", "It provides specific statistical data and empirical evidence.", "It introduces completely new arguments at the end of the paragraph.", "It lists random facts without any specific focus."], ans: 0, exp: "Topic sentence បង្ហាញ Main Idea និង Controlling Idea។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "2. Which of the following features is NOT one of the four essential features of a strong topic sentence?", opts: ["It must contain a controlling idea.", "It must not state a mere indisputable fact with nothing more to say.", "It must be overly vague so the reader can guess anything.", "It must not be too specific or locked with extreme numbers."], ans: 2, exp: "ប្រយោគប្រធានមិនត្រូវមានលក្ខណៈស្រពិចស្រពិល (vague) នោះទេ!" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "3. According to Unit 3 comma rules, when should you use a comma in a list?", opts: ["For items in a series of three or more", "Only when joining two nouns with 'and'", "Whenever a sentence exceeds ten words", "Never in academic writing"], ans: 0, exp: "ប្រើក្បៀសក្នុងបញ្ជីដែលមានចាប់ពី ៣ ធាតុឡើងទៅ។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "4. Identify the sentence type: 'When I walked into the room, I was very nervous.'", opts: ["Simple sentence", "Compound sentence", "Complex sentence", "Fragment"], ans: 2, exp: "វាជា Complex sentence ព្រោះមាន Dependent clause ផ្តើមដោយ 'When'។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "5. Which relative pronoun or connecting word introduces an adjective clause giving information about a noun?", opts: ["Because", "Who / Which", "Although", "Therefore"], ans: 1, exp: "Who / Which ប្រើសម្រាប់បង្កើន Adjective Clause ប្រាប់ពីនាម។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "6. Which of the following is an example of an introductory dependent adverb clause connector?", opts: ["And", "Although", "Therefore", "In sum"], ans: 1, exp: "Although គឺជា Connector របស់ Adverb Clause។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "7. What are the six primary goals of supporting sentences in academic paragraphs?", opts: ["Explain, Describe, Give Reasons, State Facts, Give Examples, Define Terms", "Confuse, Complain, Hide, Spill, Surrender, Ignore", "Argue, Debate, Insult, Reject, Guess, Assume", "Recite poetry, Sing songs, Tell jokes, Draw pictures, Act, Dance"], ans: 0, exp: "គោលដៅទាំង ៦ នៃ supporting sentences គឺ ពន្យល់ ពិពណ៌នា ផ្តល់ហេតុផល ប្រាប់ការពិត លើកឧទាហរណ៍ និងកំណត់ន័យ។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "8. How can a writer ensure paragraph unity and protect against off-topic sentences?", opts: ["Ensure every supporting sentence relates directly to the topic sentence and controlling idea.", "Include as many unrelated interesting facts as possible.", "Change the main topic in every single sentence.", "Avoid writing concluding sentences entirely."], ans: 0, exp: "ត្រូវធានាថាគ្រប់ប្រយោគទ្រទ្រង់ទាក់ទង topic sentence ផ្ទាល់។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "9. Which pronoun rule must be strictly followed within a paragraph?", opts: ["Maintain number agreement: use 'it' for singular nouns and 'they' for plural nouns.", "Always switch between singular and plural pronouns randomly.", "Never use pronouns in academic writing.", "Use 'he' for all inanimate objects."], ans: 0, exp: "រក្សា Pronoun Agreement៖ 'it' សម្រាប់វត្ថុទោល 'they' សម្រាប់ពហុវចនៈ។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "10. What is a sentence fragment?", opts: ["An incomplete sentence punctuated as if it were a full thought, often lacking a subject or main verb.", "Two independent clauses joined with a semicolon.", "A compound sentence with two coordinating conjunctions.", "A paragraph with a clear concluding sentence."], ans: 0, exp: "Sentence fragment គឺជាប្រយោគមិនពេញលេញ (ខ្វះ Subject ឬ Verb)។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "11. What is a comma splice?", opts: ["When two full independent sentences are joined by only a comma.", "When a comma is correctly placed after an introductory adverb clause.", "When items in a series are separated by commas.", "When a relative pronoun introduces an adjective clause."], ans: 0, exp: "Comma splice គឺការភ្ជាប់ប្រយោគពេញពីរដោយប្រើតែក្បៀស។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "12. Which of the following is NOT one of the four strategic purposes of a concluding sentence?", opts: ["Restate the main idea / paraphrase topic sentence", "Offer a suggestion to the reader", "Give the writer's final opinion", "Introduce a completely brand-new unsupported research topic"], ans: 3, exp: "ហាមដាច់ខាតមិនឱ្យដាក់ប្រធានបទស្រាវជ្រាវថ្មីក្នុង Concluding sentence ឡើយ!" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "13. Which transitional signal requires a comma directly following it when used in a conclusion?", opts: ["Therefore", "In conclusion", "Overall", "All of the above"], ans: 3, exp: "ពាក្យទាំងបីខាងលើ (Therefore, In conclusion, Overall) សុទ្ធតែត្រូវមានក្បៀសតាមពីក្រោយ។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "14. Which article should be used before a singular, non-specific count noun introduced for the first time?", opts: ["A / An", "The", "Zero article (Ø)", "An adverb"], ans: 0, exp: "ប្រើ A / An ចំពោះនាមទោលមិនច្បាស់លាស់ដែលលើកឡើងដំបូង។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "15. Why do we use 'a university' instead of 'an university'?", opts: ["Because 'university' begins with a consonant sound (/j/), not a vowel sound.", "Because university is a plural noun.", "Because university is a non-count noun.", "It is a spelling mistake; it should always be 'an university'."], ans: 0, exp: "ព្រោះពាក្យ university ចេញសំឡេងព្យញ្ជនៈ /j/ (យ)!" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "16. When should you use the zero article (Ø) in academic writing?", opts: ["When generalizing with plural count nouns or discussing non-count abstract concepts.", "When referring to a specific superlative object.", "When mentioning a noun for the second subsequent time.", "Before every proper name of a country."], ans: 0, exp: "ប្រើ Zero article ពេលនិយាយទូទៅ (Generalizing) ជាមួយ Plural nouns ឬ Abstract concepts។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "17. Which of the following words must be capitalized according to academic capitalization rules?", opts: ["Proper names of specific places and parks (e.g., Banff National Park)", "Common sports positions like goalie and referee", "General school types like a community college", "Common animals like polar bears and snow monkeys"], ans: 0, exp: "ឈ្មោះទីតាំងជាក់លាក់ត្រូវសរសេរអក្សរធំ។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "18. In Unit 5 grammar, what preposition always follows the verb 'consist'?", opts: ["of", "in", "on", "at"], ans: 0, exp: "ពាក្យ 'consist' ត្រូវតាមដោយ 'of' (consist of)។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "19. What is the definition of the academic vocabulary word 'adapt'?", opts: ["To change physical traits or behavior to survive in a new environment", "To make a formal written request for university admission", "To express dissatisfaction or pain", "To study a subject in detail"], ans: 0, exp: "Adapt = ការបត់បែនរស់នៅក្នុងបរិស្ថានថ្មី។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "20. What is a 'canyon'?", opts: ["A deep, narrow valley with steep rocky sides, often carved by a rushing river", "A barrier constructed across a waterway to regulate water flow", "A microscopic bacterium capable of spreading disease", "A two-year higher education institution"], ans: 0, exp: "Canyon = ជ្រលងភ្នំជ្រៅចោទ។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "21. What does 'affordable' mean in academic vocabulary?", opts: ["Priced reasonably enough for regular students or citizens to purchase", "Extremely expensive and restricted to elite scholars", "Free of charge provided by government grants", "Exclusively available during seasonal sales"], ans: 0, exp: "Affordable = តម្លៃសមរម្យអាចទិញបាន។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "22. What is the primary duty of a 'goalie' in hockey?", opts: ["Deflecting every slapshot away from the hockey goal net", "Skating across the entire rink to sell tickets", "Designing uniforms for the seamstress", "Cooking meals for visiting relatives"], ans: 0, exp: "Goalie = អ្នកចាំទីរារាំងកូនបាល់ចូលសំណាញ់ទី។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "23. What is condensed milk?", opts: ["A thick, sweetened dairy product produced by removing water from whole milk", "Plain water mixed with dark tea leaves", "Fresh milk squeezed from wild Arctic polar bears", "A beverage served exclusively in community colleges"], ans: 0, exp: "Condensed milk = ទឹកដោះគោខាប់។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "24. What is a 'hurricane'?", opts: ["A severe tropical storm with violent winds in the Atlantic", "A gentle spring breeze in mountainous regions", "A sudden volcanic eruption near a dam", "A heavy rubber disk used in athletic games"], ans: 0, exp: "Hurricane = ខ្យល់កន្តែរ៉ាក់ខ្យល់ខ្លាំងនៅអាត្លង់ទិក។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "25. What does the verb 'predict' mean?", opts: ["To say or estimate what will happen in the future", "To remember events from the distant past", "To express unhappiness about long work hours", "To conceal oneself in a snowbank"], ans: 0, exp: "Predict = ការទាយ ឬប៉ាន់ស្មានអនាគត។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "26. What is an 'immigrant'?", opts: ["Someone who comes to live permanently in a different or foreign country", "A tourist visiting a landmark for one afternoon", "A student enrolled in a community college course", "A local resident exploring historic neighborhoods"], ans: 0, exp: "Immigrant = ជនអន្តោប្រវេសន៍រស់នៅប្រទេសផ្សេងអចិន្ត្រៃយ៍។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "27. What is the function of a dam?", opts: ["A barrier constructed across a waterway to regulate flow and hold back water", "A narrow bridge across a deep river canyon", "A protective wall surrounding a royal palace", "A structure built to remember a historical person"], ans: 0, exp: "Dam = ទំនប់ទប់ទឹក។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "28. What does 'discrimination' mean?", opts: ["Unfair treatment of people based on origin, race, or sex", "Studying a scientific subject in meticulous detail", "Submitting university recommendation letters on time", "Following an authentic family recipe for soup"], ans: 0, exp: "Discrimination = ការរើសអើងអយុត្តិធម៌លើពូជសាសន៍ ឬភេទ។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "29. What is a 'seamstress'?", opts: ["A woman whose job is sewing and making clothing", "An investigator who studies historical artifacts", "A resident living near a community college", "A scientist who tracks typhoons and cyclones"], ans: 0, exp: "Seamstress = ជាងដេរខោអាវស្ត្រី។" },
+            { sec: 'sec4', secTitle: 'Section IV: Multiple Choice', q: "30. What is the recommended target length and structure for an academic paragraph in test prep writing tasks?", opts: ["At least 150 words (6 to 10 sentences) with an indented topic sentence, supporting evidence, and a concluding sentence.", "Exactly one sentence with no punctuation.", "A bulleted list of 50 unconnected words.", "A single run-on sentence without commas or periods."], ans: 0, exp: "ប្រវែងកថាខណ្ឌអប់រំស្តង់ដារ គឺយ៉ាងហោច 150 ពាក្យ (6-10 ប្រយោគ)!" }
+        ];
+
+        // State Variables
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let userAnswers = [];
+
+        // DOM Elements
+        const setupCard = document.getElementById('setup-card');
+        const quizContainer = document.getElementById('quiz-container');
+        const resultCard = document.getElementById('result-card');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const sectionBadge = document.getElementById('section-badge');
+        const itemNumber = document.getElementById('item-number');
+        const progressText = document.getElementById('progress-text');
+        const scoreText = document.getElementById('score-text');
+        const progressBar = document.getElementById('progress-bar');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const feedbackCard = document.getElementById('feedback-card');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackIcon = document.getElementById('feedback-icon');
+
+        // Start Quiz Function
+        function startQuiz(sectionKey) {
+            if (sectionKey === 'all') {
+                currentQuestions = [...allQuestions];
+            } else {
+                currentQuestions = allQuestions.filter(q => q.sec === sectionKey);
+            }
+
+            currentIndex = 0;
+            score = 0;
+            userAnswers = new Array(currentQuestions.length).fill(null);
+
+            setupCard.classList.add('hidden');
+            resultCard.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+
+            loadQuestion();
+        }
+
+        // Load Single Question
+        function loadQuestion() {
+            const q = currentQuestions[currentIndex];
+
+            sectionBadge.textContent = q.secTitle;
+            itemNumber.textContent = `#${currentIndex + 1} of ${currentQuestions.length}`;
+            questionText.textContent = q.q;
+
+            const progressPercent = ((currentIndex + 1) / currentQuestions.length) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+            progressText.textContent = `សំណួរ ${currentIndex + 1} / ${currentQuestions.length}`;
+            scoreText.textContent = `ពិន្ទុ: ${score}`;
+
+            optionsContainer.innerHTML = '';
+            feedbackCard.classList.add('hidden');
+
+            q.opts.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full p-4 rounded-xl border border-slate-200 text-left text-sm md:text-base font-medium transition flex items-center justify-between hover:border-indigo-400 hover:bg-slate-50";
+                btn.innerHTML = `<span>${opt}</span> <span class="opt-indicator text-slate-300 font-bold">◯</span>`;
+
+                if (userAnswers[currentIndex] !== null) {
+                    btn.disabled = true;
+                    if (index === q.ans) {
+                        btn.classList.add('bg-emerald-50', 'border-emerald-500', 'text-emerald-900');
+                        btn.querySelector('.opt-indicator').innerHTML = '✓';
+                        btn.querySelector('.opt-indicator').className = 'text-emerald-600 font-bold';
+                    } else if (index === userAnswers[currentIndex]) {
+                        btn.classList.add('bg-rose-50', 'border-rose-500', 'text-rose-900');
+                        btn.querySelector('.opt-indicator').innerHTML = '✕';
+                        btn.querySelector('.opt-indicator').className = 'text-rose-600 font-bold';
+                    }
+                } else {
+                    btn.onclick = () => selectOption(index);
+                }
+
+                optionsContainer.appendChild(btn);
+            });
+
+            if (userAnswers[currentIndex] !== null) {
+                showFeedback(userAnswers[currentIndex] === q.ans, q.exp);
+            }
+
+            prevBtn.disabled = currentIndex === 0;
+            if (currentIndex === currentQuestions.length - 1) {
+                nextBtn.textContent = 'មើលលទ្ធផល (Finish) 🎉';
+            } else {
+                nextBtn.textContent = 'បន្ទាប់ (Next) →';
+            }
+        }
+
+        // Handle Option Selection
+        function selectOption(selectedIndex) {
+            const q = currentQuestions[currentIndex];
+            userAnswers[currentIndex] = selectedIndex;
+
+            if (selectedIndex === q.ans) {
+                score++;
+            }
+
+            loadQuestion();
+        }
+
+        // Show Feedback
+        function showFeedback(isCorrect, explanation) {
+            feedbackCard.classList.remove('hidden', 'bg-emerald-50', 'bg-rose-50', 'border-emerald-200', 'border-rose-200');
+            
+            if (isCorrect) {
+                feedbackCard.classList.add('bg-emerald-50', 'border', 'border-emerald-200');
+                feedbackTitle.textContent = "ត្រឹមត្រូវ! (Correct)";
+                feedbackTitle.className = "font-bold text-sm text-emerald-800";
+                feedbackText.className = "text-xs md:text-sm mt-1 text-emerald-700";
+                feedbackIcon.textContent = "✅";
+            } else {
+                feedbackCard.classList.add('bg-rose-50', 'border', 'border-rose-200');
+                feedbackTitle.textContent = "មិនត្រឹមត្រូវទេ! (Incorrect)";
+                feedbackTitle.className = "font-bold text-sm text-rose-800";
+                feedbackText.className = "text-xs md:text-sm mt-1 text-rose-700";
+                feedbackIcon.textContent = "❌";
+            }
+
+            feedbackText.textContent = explanation;
+        }
+
+        // Next Question
+        function nextQuestion() {
+            if (currentIndex < currentQuestions.length - 1) {
+                currentIndex++;
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Prev Question
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                loadQuestion();
+            }
+        }
+
+        // Show Results Screen
+        function showResults() {
+            quizContainer.classList.add('hidden');
+            resultCard.classList.remove('hidden');
+
+            const total = currentQuestions.length;
+            const percentage = Math.round((score / total) * 100);
+
+            document.getElementById('final-score').textContent = `${score} / ${total}`;
+            document.getElementById('final-percentage').textContent = `${percentage}% Accuracy (${score} Correct)`;
+        }
+
+        // Restart Quiz
+        function restartQuiz() {
+            resultCard.classList.add('hidden');
+            setupCard.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
